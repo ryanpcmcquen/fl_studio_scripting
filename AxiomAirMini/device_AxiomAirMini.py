@@ -6,13 +6,15 @@
 #
 # Changelog:
 # ----------
-#
 # 0.1.0 - October 15 2020
 # Initial release. Add support for transport and ui controls.
-
+#
 # 0.2.0 - October 16 2020
 # Add support for mixer controls on knobs 1-8.
-
+#
+# 0.2.1 - October 16 2020
+# Comment out debug output.
+#
 
 import midi
 import mixer
@@ -48,9 +50,9 @@ def OnMidiMsg(event):
     event.handled = False
 
     # Prints the data recieved to the 'Script output' window (for debugging):
-    print(event.midiId, event.data1, event.data2)
+    #print(event.midiId, event.data1, event.data2)
     # Prints the whole kit and kaboodle:
-    print(event)
+    # print(event)
 
     # Use midi.MIDI_NOTEON for note events.
     if event.midiId == midi.MIDI_CONTROLCHANGE:
