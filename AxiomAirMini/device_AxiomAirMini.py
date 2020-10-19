@@ -15,6 +15,11 @@
 # 0.2.1 - October 16 2020
 # Comment out debug output.
 #
+# 0.3.0 - October 19 2020
+# Map the HyperControl switcher to focusing
+# the channel rack. This allows easy track
+# switching with the ui arrows.
+#
 
 import midi
 import mixer
@@ -30,6 +35,7 @@ Buttons = {
     'Right': 0x15,
     'Left': 0x16,
     'Center': 0x17,
+    'Hyper': 0x3A,
 }
 
 Knobs = [
@@ -81,6 +87,19 @@ def OnMidiMsg(event):
                 event.handled = True
             elif event.data1 == Buttons['Center']:
                 ui.enter()
+                event.handled = True
+
+            elif event.data1 == Buttons['Hyper']:
+                # FL window constants
+                # -------------------
+                # Parameter       Value   Documentation
+                # widMixer        0       Mixer
+                # widChannelRack  1       Channel rack
+                # widPlaylist     2       Playlist
+                # widPianoRoll    3       Piano roll
+                # widBrowser      4       Browser
+                # widPlugin       5       Plugin window
+                ui.setFocused(1)
                 event.handled = True
 
             elif event.data1 in Knobs:
