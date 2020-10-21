@@ -20,6 +20,11 @@
 # the channel rack. This allows easy track
 # switching with the ui arrows.
 #
+# 0.3.1 - October 21 2020
+# Add a function for printing all
+# useful object properties (for
+# use in debugging scripts).
+#
 
 import midi
 import mixer
@@ -39,26 +44,35 @@ Buttons = {
 }
 
 Knobs = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
+    0x01,
+    0x02,
+    0x03,
+    0x04,
+    0x05,
+    0x06,
+    0x07,
+    0x08,
 ]
 
 
+def debug_event(event):
+    # Snippet to  debug all available
+    # properties and their values
+    # on event objects:
+    for prop in dir(event):
+        # Filter out all 'private' methods:
+        if prop[:2] != '__':
+            print(prop + ': ')
+            print(event.__getattribute__(prop))
+
+
 def OnMidiMsg(event):
+    # print("OnMidiMsg event:")
+    # debug_event(event)
+
     # If the script does not recognize the event, do nothing.
     # It's then passed onto FL Studio to use.
     event.handled = False
-
-    # Prints the data recieved to the 'Script output' window (for debugging):
-    #print(event.midiId, event.data1, event.data2)
-    # Prints the whole kit and kaboodle:
-    # print(event)
 
     # Use midi.MIDI_NOTEON for note events.
     if event.midiId == midi.MIDI_CONTROLCHANGE:
@@ -106,3 +120,24 @@ def OnMidiMsg(event):
                 mixer.setTrackVolume(
                     event.data1, event.data2 / 100)
                 event.handled = True
+
+
+# Known event properties:
+# [
+# '__class__', '__delattr__', '__dir__',
+# '__doc__', '__eq__', '__format__',
+# '__ge__', '__getattribute__',
+# '__gt__', '__hash__', '__init__',
+# '__init_subclass__', '__le__', '__lt__',
+# '__ne__', '__new__', '__reduce__',
+# '__reduce_ex__', '__repr__', '__setattr__',
+# '__sizeof__', '__str__', '__subclasshook__',
+# 'controlNum', 'controlVal', 'data1',
+# 'data2', 'handled', 'inEv',
+# 'isIncrement', 'midiChan', 'midiChanEx',
+# 'midiId', 'note', 'outEv',
+# 'pitchBend', 'pmeFlags', 'port',
+# 'pressure', 'progNum', 'res',
+# 'senderId', 'status', 'sysex',
+# 'timestamp', 'velocity', 'write'
+# ]
