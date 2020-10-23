@@ -25,7 +25,12 @@
 # useful object properties (for
 # use in debugging scripts).
 #
+# 0.4.0 - October 23 2020
+# Allow drum pads to select channels
+# if Hyper key is engaged.
+#
 
+import channels
 import midi
 import mixer
 import transport
@@ -54,22 +59,67 @@ Knobs = [
     0x08,
 ]
 
+Pads = [
+    0x24,
+    0x25,
+    0x26,
+    0x27,
+    0x28,
+    0x29,
+    0x2A,
+    0x2B,
+]
 
-def debug_event(event):
+SECONDAY_MODE_HINT = '**SECONDARY MODE**'
+
+
+# Known event properties:
+# 'controlNum', 'controlVal', 'data1',
+# 'data2', 'handled', 'inEv',
+# 'isIncrement', 'midiChan', 'midiChanEx',
+# 'midiId', 'note', 'outEv',
+# 'pitchBend', 'pmeFlags', 'port',
+# 'pressure', 'progNum', 'res',
+# 'senderId', 'status', 'sysex',
+# 'timestamp', 'velocity', 'write'
+
+
+def debug_obj(obj):
     # Snippet to  debug all available
-    # properties and their values
-    # on event objects:
-    for prop in dir(event):
+    # properties and their
+    # values on objects:
+    for prop in dir(obj):
         # Filter out all 'private' methods:
         if prop[:2] != '__':
             print(prop + ': ')
-            print(event.__getattribute__(prop))
+            print(getattr(obj, prop))
+
+
+def OnMidiIn(event):
+    event.handled = False
+    if event.data1 == Buttons['Hyper']:
+        if event.data2 > 0:
+            ui.setHintMsg(SECONDAY_MODE_HINT)
+        else:
+            ui.setHintMsg('')
+
+    # Secondary mode!
+    # This has to be handled in 'OnMidiIn',
+    # because by the time it gets into
+    # 'OnMidiMsg', the hint message
+    # is already being
+    # overwritten.
+    if ui.getHintMsg() == SECONDAY_MODE_HINT:
+        if event.data1 in Pads:
+            if event.data2 > 0:
+                channels.selectChannel(
+                    Pads.index(event.data1),
+                    1
+                )
+                event.handled = True
 
 
 def OnMidiMsg(event):
-    # print("OnMidiMsg event:")
-    # debug_event(event)
-
     # If the script does not recognize the event, do nothing.
     # It's then passed onto FL Studio to use.
     event.handled = False
@@ -120,24 +170,3 @@ def OnMidiMsg(event):
                 mixer.setTrackVolume(
                     event.data1, event.data2 / 100)
                 event.handled = True
-
-
-# Known event properties:
-# [
-# '__class__', '__delattr__', '__dir__',
-# '__doc__', '__eq__', '__format__',
-# '__ge__', '__getattribute__',
-# '__gt__', '__hash__', '__init__',
-# '__init_subclass__', '__le__', '__lt__',
-# '__ne__', '__new__', '__reduce__',
-# '__reduce_ex__', '__repr__', '__setattr__',
-# '__sizeof__', '__str__', '__subclasshook__',
-# 'controlNum', 'controlVal', 'data1',
-# 'data2', 'handled', 'inEv',
-# 'isIncrement', 'midiChan', 'midiChanEx',
-# 'midiId', 'note', 'outEv',
-# 'pitchBend', 'pmeFlags', 'port',
-# 'pressure', 'progNum', 'res',
-# 'senderId', 'status', 'sysex',
-# 'timestamp', 'velocity', 'write'
-# ]
