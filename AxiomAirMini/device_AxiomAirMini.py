@@ -25,12 +25,12 @@
 # useful object properties (for
 # use in debugging scripts).
 #
-# IN DEVELOPMENT:
 # 0.4.0 - October 23 2020
 # Allow drum pads to select channels
 # if Hyper key is engaged.
 #
 
+import channels
 import midi
 import mixer
 import transport
@@ -59,25 +59,19 @@ Knobs = [
     0x08,
 ]
 
-Pads = {
-    1: 36,
-    2: 37,
-    3: 38,
-    4: 39,
-    5: 40,
-    6: 41,
-    7: 42,
-    8: 43,
-}
+Pads = [
+    0x24,
+    0x25,
+    0x26,
+    0x27,
+    0x28,
+    0x29,
+    0x2A,
+    0x2B,
+]
 
+SECONDAY_MODE_HINT = '**SECONDARY MODE**'
 
-def OnInit():
-    # global keyboard_state_file
-    # keyboard_state_file = open(".__axiom_state__", "x")
-    # keyboard_state_file.write("0")
-    # keyboard_state_file.close()
-    global hyper_engaged
-    hyper_engaged = False
 
 # Known event properties:
 # 'controlNum', 'controlVal', 'data1',
@@ -102,23 +96,30 @@ def debug_obj(obj):
 
 
 def OnMidiIn(event):
-    # debug_obj(event)
     event.handled = False
     if event.data1 == Buttons['Hyper']:
-        debug_obj(device)
-        global hyper_engaged
-        hyper_engaged = True
-        # global keyboard_state_file
-        # keyboard_state_file.write("1")
-        # keyboard_state_file.close()
-        print('OnMidiIn:')
-        print(hyper_engaged)
+        if event.data2 > 0:
+            ui.setHintMsg(SECONDAY_MODE_HINT)
+        else:
+            ui.setHintMsg('')
+
+    # Secondary mode!
+    # This has to be handled in 'OnMidiIn',
+    # because by the time it gets into
+    # 'OnMidiMsg', the hint message
+    # is already being
+    # overwritten.
+    if ui.getHintMsg() == SECONDAY_MODE_HINT:
+        if event.data1 in Pads:
+            if event.data2 > 0:
+                channels.selectChannel(
+                    Pads.index(event.data1),
+                    1
+                )
+                event.handled = True
 
 
 def OnMidiMsg(event):
-    # print("OnMidiMsg event:")
-    # debug_obj(event)
-
     # If the script does not recognize the event, do nothing.
     # It's then passed onto FL Studio to use.
     event.handled = False
@@ -169,10 +170,3 @@ def OnMidiMsg(event):
                 mixer.setTrackVolume(
                     event.data1, event.data2 / 100)
                 event.handled = True
-
-    elif event.midiId == midi.MIDI_NOTEON:
-        if event.data2 > 0:
-            if event.data1 == Pads[1]:
-                print('OnNoteOn:')
-                print(hyper_engaged)
-                # print(keyboard_state_file.read())
