@@ -25,6 +25,11 @@
 # useful object properties (for
 # use in debugging scripts).
 #
+# IN DEVELOPMENT:
+# 0.4.0 - October 23 2020
+# Allow drum pads to select channels
+# if Hyper key is engaged.
+#
 
 import midi
 import mixer
@@ -54,21 +59,65 @@ Knobs = [
     0x08,
 ]
 
+Pads = {
+    1: 36,
+    2: 37,
+    3: 38,
+    4: 39,
+    5: 40,
+    6: 41,
+    7: 42,
+    8: 43,
+}
 
-def debug_event(event):
+
+def OnInit():
+    # global keyboard_state_file
+    # keyboard_state_file = open(".__axiom_state__", "x")
+    # keyboard_state_file.write("0")
+    # keyboard_state_file.close()
+    global hyper_engaged
+    hyper_engaged = False
+
+# Known event properties:
+# 'controlNum', 'controlVal', 'data1',
+# 'data2', 'handled', 'inEv',
+# 'isIncrement', 'midiChan', 'midiChanEx',
+# 'midiId', 'note', 'outEv',
+# 'pitchBend', 'pmeFlags', 'port',
+# 'pressure', 'progNum', 'res',
+# 'senderId', 'status', 'sysex',
+# 'timestamp', 'velocity', 'write'
+
+
+def debug_obj(obj):
     # Snippet to  debug all available
-    # properties and their values
-    # on event objects:
-    for prop in dir(event):
+    # properties and their
+    # values on objects:
+    for prop in dir(obj):
         # Filter out all 'private' methods:
         if prop[:2] != '__':
             print(prop + ': ')
-            print(event.__getattribute__(prop))
+            print(getattr(obj, prop))
+
+
+def OnMidiIn(event):
+    # debug_obj(event)
+    event.handled = False
+    if event.data1 == Buttons['Hyper']:
+        debug_obj(device)
+        global hyper_engaged
+        hyper_engaged = True
+        # global keyboard_state_file
+        # keyboard_state_file.write("1")
+        # keyboard_state_file.close()
+        print('OnMidiIn:')
+        print(hyper_engaged)
 
 
 def OnMidiMsg(event):
     # print("OnMidiMsg event:")
-    # debug_event(event)
+    # debug_obj(event)
 
     # If the script does not recognize the event, do nothing.
     # It's then passed onto FL Studio to use.
@@ -121,23 +170,9 @@ def OnMidiMsg(event):
                     event.data1, event.data2 / 100)
                 event.handled = True
 
-
-# Known event properties:
-# [
-# '__class__', '__delattr__', '__dir__',
-# '__doc__', '__eq__', '__format__',
-# '__ge__', '__getattribute__',
-# '__gt__', '__hash__', '__init__',
-# '__init_subclass__', '__le__', '__lt__',
-# '__ne__', '__new__', '__reduce__',
-# '__reduce_ex__', '__repr__', '__setattr__',
-# '__sizeof__', '__str__', '__subclasshook__',
-# 'controlNum', 'controlVal', 'data1',
-# 'data2', 'handled', 'inEv',
-# 'isIncrement', 'midiChan', 'midiChanEx',
-# 'midiId', 'note', 'outEv',
-# 'pitchBend', 'pmeFlags', 'port',
-# 'pressure', 'progNum', 'res',
-# 'senderId', 'status', 'sysex',
-# 'timestamp', 'velocity', 'write'
-# ]
+    elif event.midiId == midi.MIDI_NOTEON:
+        if event.data2 > 0:
+            if event.data1 == Pads[1]:
+                print('OnNoteOn:')
+                print(hyper_engaged)
+                # print(keyboard_state_file.read())
