@@ -38,11 +38,21 @@
 # secondary function for
 # numbered keys.
 #
+# 0.6.0 - October 24 2020
+# Give Stop button double duty tap tempo functionality.
+# Map pattern selection to Pad Bank 2, instead of
+# Numbered Keys, since those change with each
+# octave. Solo patterns when selecting them.
+# Remove channel rack focus from Hyper, so
+# it can focus on being the secondary
+# mode thingy only.
+#
 
 import channels
 import midi
 import mixer
 import patterns
+import playlist
 import transport
 import ui
 
@@ -58,6 +68,7 @@ Buttons = {
     'Hyper': 0x3A,
 }
 
+
 Knobs = [
     0x01,
     0x02,
@@ -69,29 +80,30 @@ Knobs = [
     0x08,
 ]
 
-Pads = [
-    0x24,
-    0x25,
-    0x26,
-    0x27,
-    0x28,
-    0x29,
-    0x2A,
-    0x2B,
-]
+PadBanks = {
+    '1': [
+        0x24,
+        0x25,
+        0x26,
+        0x27,
+        0x28,
+        0x29,
+        0x2A,
+        0x2B,
+    ],
+    '2':
+    [
+        0x2C,
+        0x2D,
+        0x2E,
+        0x2F,
+        0x30,
+        0x31,
+        0x32,
+        0x33,
+    ]
+}
 
-Numbered_Keys = [
-    0x32,
-    0x34,
-    0x35,
-    0x37,
-    0x39,
-    0x3B,
-    0x3C,
-    0x3E,
-    0x40,
-    0x41,
-]
 
 SECONDAY_MODE_HINT = '**SECONDARY MODE**'
 
@@ -134,17 +146,22 @@ def OnMidiIn(event):
     # overwritten.
     if ui.getHintMsg() == SECONDAY_MODE_HINT:
         if event.data2 > 0:
-            if event.data1 in Pads:
+            if event.data1 in PadBanks['1']:
                 channels.selectChannel(
-                    Pads.index(event.data1),
+                    PadBanks['1'].index(event.data1),
                     1
                 )
                 event.handled = True
-            if event.data1 in Numbered_Keys:
+            if event.data1 in PadBanks['2']:
+                patterns.deselectAll()
                 patterns.selectPattern(
                     # These are off by 1, but the
                     # channels are not ...
-                    Numbered_Keys.index(event.data1) + 1,
+                    PadBanks['2'].index(event.data1) + 1,
+                    1
+                )
+                playlist.soloTrack(
+                    PadBanks['2'].index(event.data1) + 1,
                     1
                 )
                 event.handled = True
@@ -160,6 +177,11 @@ def OnMidiMsg(event):
         if event.data2 > 0:
             if event.data1 == Buttons['Stop']:
                 transport.stop()
+                transport.globalTransport(
+                    midi.FPT_TapTempo,
+                    106,
+                    event.pmeFlags - 1
+                )
                 event.handled = True
             elif event.data1 == Buttons['Start']:
                 transport.start()
@@ -182,19 +204,6 @@ def OnMidiMsg(event):
                 event.handled = True
             elif event.data1 == Buttons['Center']:
                 ui.enter()
-                event.handled = True
-
-            elif event.data1 == Buttons['Hyper']:
-                # FL window constants
-                # -------------------
-                # Parameter       Value   Documentation
-                # widMixer        0       Mixer
-                # widChannelRack  1       Channel rack
-                # widPlaylist     2       Playlist
-                # widPianoRoll    3       Piano roll
-                # widBrowser      4       Browser
-                # widPlugin       5       Plugin window
-                ui.setFocused(1)
                 event.handled = True
 
             elif event.data1 in Knobs:
