@@ -33,6 +33,11 @@
 # Allow pattern selection with
 # numbered piano keys.
 #
+# 0.5.1 - October 23 2020
+# Set event to handled on
+# secondary function for
+# numbered keys.
+#
 
 import channels
 import midi
@@ -142,6 +147,7 @@ def OnMidiIn(event):
                     Numbered_Keys.index(event.data1) + 1,
                     1
                 )
+                event.handled = True
 
 
 def OnMidiMsg(event):
