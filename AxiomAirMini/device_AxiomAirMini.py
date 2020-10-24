@@ -29,10 +29,15 @@
 # Allow drum pads to select channels
 # if Hyper key is engaged.
 #
+# 0.5.0 - October 23 2020
+# Allow pattern selection with
+# numbered piano keys.
+#
 
 import channels
 import midi
 import mixer
+import patterns
 import transport
 import ui
 
@@ -68,6 +73,19 @@ Pads = [
     0x29,
     0x2A,
     0x2B,
+]
+
+Numbered_Keys = [
+    0x32,
+    0x34,
+    0x35,
+    0x37,
+    0x39,
+    0x3B,
+    0x3C,
+    0x3E,
+    0x40,
+    0x41,
 ]
 
 SECONDAY_MODE_HINT = '**SECONDARY MODE**'
@@ -110,13 +128,20 @@ def OnMidiIn(event):
     # is already being
     # overwritten.
     if ui.getHintMsg() == SECONDAY_MODE_HINT:
-        if event.data1 in Pads:
-            if event.data2 > 0:
+        if event.data2 > 0:
+            if event.data1 in Pads:
                 channels.selectChannel(
                     Pads.index(event.data1),
                     1
                 )
                 event.handled = True
+            if event.data1 in Numbered_Keys:
+                patterns.selectPattern(
+                    # These are off by 1, but the
+                    # channels are not ...
+                    Numbered_Keys.index(event.data1) + 1,
+                    1
+                )
 
 
 def OnMidiMsg(event):
@@ -168,5 +193,7 @@ def OnMidiMsg(event):
 
             elif event.data1 in Knobs:
                 mixer.setTrackVolume(
-                    event.data1, event.data2 / 100)
+                    Knobs.index(event.data1),
+                    event.data2 / 100
+                )
                 event.handled = True
