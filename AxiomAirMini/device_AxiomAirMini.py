@@ -48,6 +48,10 @@
 # 0.6.1 - October 25 2020
 # Documentation update. Simplify Tap Tempo call.
 #
+# 0.7.0 - October 25 2020
+# Add secondary functionality to Stop button
+# to toggle Metronome.
+#
 
 import channels
 import midi
@@ -153,6 +157,7 @@ def OnMidiIn(event):
                     1
                 )
                 event.handled = True
+
             if event.data1 in PadBanks['2']:
                 patterns.deselectAll()
                 patterns.selectPattern(
@@ -166,6 +171,12 @@ def OnMidiIn(event):
                     1
                 )
                 event.handled = True
+
+            if event.data1 == Buttons['Stop']:
+                transport.globalTransport(
+                    midi.FPT_Metronome,
+                    1
+                )
 
 
 def OnMidiMsg(event):
@@ -183,9 +194,11 @@ def OnMidiMsg(event):
                     1
                 )
                 event.handled = True
+
             elif event.data1 == Buttons['Start']:
                 transport.start()
                 event.handled = True
+
             elif event.data1 == Buttons['Record']:
                 transport.record()
                 event.handled = True
@@ -193,15 +206,19 @@ def OnMidiMsg(event):
             elif event.data1 == Buttons['Up']:
                 ui.up()
                 event.handled = True
+
             elif event.data1 == Buttons['Down']:
                 ui.down()
                 event.handled = True
+
             elif event.data1 == Buttons['Right']:
                 ui.right()
                 event.handled = True
+
             elif event.data1 == Buttons['Left']:
                 ui.left()
                 event.handled = True
+
             elif event.data1 == Buttons['Center']:
                 ui.enter()
                 event.handled = True
