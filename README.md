@@ -4,9 +4,13 @@ Fun stuff for FL Studio.
 
 To install the Axiom Air Mini 32 script, find your FL Studio data directory, and copy the `device_AxiomAirMini` directory, so that it lives _inside_ the `Settings\Hardware` directory (`Settings/Hardware` on Mac OS).
 
+---
+
 ## Forum post:
 
 https://forum.image-line.com/viewtopic.php?f=1994&t=240884
+
+---
 
 ## Legend:
 
@@ -69,6 +73,10 @@ hold the Hyper button, then press the desired Pad.
 | 7    | 0x32 | Select Pattern 7 / Solo Track 7 |
 | 8    | 0x33 | Select Pattern 8 / Solo Track 8 |
 
-Video demo of my scratchpad workflow made possible through midi scripting:
+---
+
+## Demo:
+
+Video of my scratchpad workflow made possible through midi scripting:
 
 [![Scratchpad workflow](https://img.youtube.com/vi/VGsCKOv_wKg/0.jpg)](https://www.youtube.com/watch?v=VGsCKOv_wKg)
