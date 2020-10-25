@@ -7,7 +7,8 @@
 # Changelog:
 # ----------
 # 0.1.0 - October 15 2020
-# Initial release. Add support for transport and ui controls.
+# Initial release. Add support for transport
+# and ui controls.
 #
 # 0.2.0 - October 16 2020
 # Add support for mixer controls on knobs 1-8.
@@ -16,36 +17,36 @@
 # Comment out debug output.
 #
 # 0.3.0 - October 19 2020
-# Map the HyperControl switcher to focusing
-# the channel rack. This allows easy track
+# Map the HyperControl switcher to focusing the
+# channel rack. This allows easy track
 # switching with the ui arrows.
 #
 # 0.3.1 - October 21 2020
-# Add a function for printing all
-# useful object properties (for
-# use in debugging scripts).
+# Add a function for printing all useful object
+# properties (for use in debugging scripts).
 #
 # 0.4.0 - October 23 2020
-# Allow drum pads to select channels
-# if Hyper key is engaged.
+# Allow drum pads to select channels if Hyper
+# key is engaged.
 #
 # 0.5.0 - October 23 2020
-# Allow pattern selection with
-# numbered piano keys.
+# Allow pattern selection with numbered
+# piano keys.
 #
 # 0.5.1 - October 23 2020
-# Set event to handled on
-# secondary function for
-# numbered keys.
+# Set event to handled on secondary
+# function for numbered keys.
 #
 # 0.6.0 - October 24 2020
-# Give Stop button double duty tap tempo functionality.
+# Give the Stop button double duty, hello Tap Tempo.
 # Map pattern selection to Pad Bank 2, instead of
-# Numbered Keys, since those change with each
-# octave. Solo patterns when selecting them.
-# Remove channel rack focus from Hyper, so
-# it can focus on being the secondary
-# mode thingy only.
+# Numbered Keys, which change each octave. Solo
+# patterns when selecting them. Remove channel
+# rack focus from Hyper, so it can focus
+# on being the secondary mode thingy.
+#
+# 0.6.1 - October 25 2020
+# Documentation update. Simplify Tap Tempo call.
 #
 
 import channels
@@ -179,8 +180,7 @@ def OnMidiMsg(event):
                 transport.stop()
                 transport.globalTransport(
                     midi.FPT_TapTempo,
-                    106,
-                    event.pmeFlags - 1
+                    1
                 )
                 event.handled = True
             elif event.data1 == Buttons['Start']:
