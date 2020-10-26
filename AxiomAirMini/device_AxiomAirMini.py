@@ -52,6 +52,9 @@
 # Add secondary functionality to Stop button
 # to toggle Metronome.
 #
+# 0.8.0 - October 26 2020
+# Add secondary actions to the arrow keys.
+#
 
 import channels
 import midi
@@ -125,7 +128,7 @@ SECONDAY_MODE_HINT = '**SECONDARY MODE**'
 
 
 def debug_obj(obj):
-    # Snippet to  debug all available
+    # Snippet to  debug all
     # properties and their
     # values on objects:
     for prop in dir(obj):
@@ -133,6 +136,108 @@ def debug_obj(obj):
         if prop[:2] != '__':
             print(prop + ': ')
             print(getattr(obj, prop))
+
+
+def primary_actions(event):
+    if event.data1 == Buttons['Stop']:
+        transport.stop()
+        transport.globalTransport(
+            midi.FPT_TapTempo,
+            1
+        )
+        event.handled = True
+
+    elif event.data1 == Buttons['Start']:
+        transport.start()
+        event.handled = True
+
+    elif event.data1 == Buttons['Record']:
+        transport.record()
+        event.handled = True
+
+    elif event.data1 == Buttons['Up']:
+        ui.up()
+        event.handled = True
+
+    elif event.data1 == Buttons['Down']:
+        ui.down()
+        event.handled = True
+
+    elif event.data1 == Buttons['Right']:
+        ui.right()
+        event.handled = True
+
+    elif event.data1 == Buttons['Left']:
+        ui.left()
+        event.handled = True
+
+    elif event.data1 == Buttons['Center']:
+        ui.enter()
+        event.handled = True
+
+    elif event.data1 in Knobs:
+        mixer.setTrackVolume(
+            Knobs.index(event.data1),
+            event.data2 / 100
+        )
+        event.handled = True
+
+
+def secondary_actions(event):
+    if event.data1 in PadBanks['1']:
+        channels.selectChannel(
+            PadBanks['1'].index(event.data1),
+            1
+        )
+        event.handled = True
+
+    elif event.data1 in PadBanks['2']:
+        patterns.deselectAll()
+        patterns.selectPattern(
+            # These are off by 1, but the
+            # channels are not ...
+            PadBanks['2'].index(event.data1) + 1,
+            1
+        )
+        playlist.soloTrack(
+            PadBanks['2'].index(event.data1) + 1,
+            1
+        )
+        event.handled = True
+
+    elif event.data1 == Buttons['Stop']:
+        transport.globalTransport(
+            midi.FPT_Metronome,
+            1
+        )
+
+    elif event.data1 == Buttons['Up']:
+        # This could start at 1, but 0 doesn't do
+        # anything bad, for the time being.
+        for track_index in range(playlist.trackCount()):
+            if playlist.isTrackMuted(track_index):
+                playlist.muteTrack(track_index)
+
+    # FL window constants
+    # -------------------
+    # Parameter       Value   Documentation
+    # widMixer        0       Mixer
+    # widChannelRack  1       Channel rack
+    # widPlaylist     2       Playlist
+    # widPianoRoll    3       Piano roll
+    # widBrowser      4       Browser
+    # widPlugin       5       Plugin window
+    elif event.data1 == Buttons['Down']:
+        ui.setFocused(0)
+        event.handled = True
+
+    elif event.data1 == Buttons['Right']:
+        ui.setFocused(2)
+        event.handled = True
+
+    elif event.data1 == Buttons['Left']:
+        ui.setFocused(1)
+        event.handled = True
 
 
 def OnMidiIn(event):
@@ -151,32 +256,7 @@ def OnMidiIn(event):
     # overwritten.
     if ui.getHintMsg() == SECONDAY_MODE_HINT:
         if event.data2 > 0:
-            if event.data1 in PadBanks['1']:
-                channels.selectChannel(
-                    PadBanks['1'].index(event.data1),
-                    1
-                )
-                event.handled = True
-
-            if event.data1 in PadBanks['2']:
-                patterns.deselectAll()
-                patterns.selectPattern(
-                    # These are off by 1, but the
-                    # channels are not ...
-                    PadBanks['2'].index(event.data1) + 1,
-                    1
-                )
-                playlist.soloTrack(
-                    PadBanks['2'].index(event.data1) + 1,
-                    1
-                )
-                event.handled = True
-
-            if event.data1 == Buttons['Stop']:
-                transport.globalTransport(
-                    midi.FPT_Metronome,
-                    1
-                )
+            secondary_actions(event)
 
 
 def OnMidiMsg(event):
@@ -187,45 +267,4 @@ def OnMidiMsg(event):
     # Use midi.MIDI_NOTEON for note events.
     if event.midiId == midi.MIDI_CONTROLCHANGE:
         if event.data2 > 0:
-            if event.data1 == Buttons['Stop']:
-                transport.stop()
-                transport.globalTransport(
-                    midi.FPT_TapTempo,
-                    1
-                )
-                event.handled = True
-
-            elif event.data1 == Buttons['Start']:
-                transport.start()
-                event.handled = True
-
-            elif event.data1 == Buttons['Record']:
-                transport.record()
-                event.handled = True
-
-            elif event.data1 == Buttons['Up']:
-                ui.up()
-                event.handled = True
-
-            elif event.data1 == Buttons['Down']:
-                ui.down()
-                event.handled = True
-
-            elif event.data1 == Buttons['Right']:
-                ui.right()
-                event.handled = True
-
-            elif event.data1 == Buttons['Left']:
-                ui.left()
-                event.handled = True
-
-            elif event.data1 == Buttons['Center']:
-                ui.enter()
-                event.handled = True
-
-            elif event.data1 in Knobs:
-                mixer.setTrackVolume(
-                    Knobs.index(event.data1),
-                    event.data2 / 100
-                )
-                event.handled = True
+            primary_actions(event)
