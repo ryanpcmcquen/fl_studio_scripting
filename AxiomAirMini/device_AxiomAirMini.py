@@ -60,6 +60,10 @@
 # so that 1-8 are covered
 # instead of Master-7.
 #
+# 0.9.0 - October 26 2020
+# Make pitch bend control Master track
+# volume.
+#
 
 import channels
 import midi
@@ -273,3 +277,24 @@ def OnMidiMsg(event):
     if event.midiId == midi.MIDI_CONTROLCHANGE:
         if event.data2 > 0:
             primary_actions(event)
+
+
+def OnPitchBend(event):
+    # Control Master track volume with pitch bend. 64 seems
+    # to be the neutral point that +/- return to when
+    # bending, so we use an off-by-one value of
+    # that neutral point to determine if we
+    # are increasing or decreasing.
+    if event.data2 > 65:
+        mixer.setTrackVolume(
+            0,
+            mixer.getTrackVolume(0) + 0.005
+        )
+        event.handled = True
+
+    elif event.data2 < 63:
+        mixer.setTrackVolume(
+            0,
+            mixer.getTrackVolume(0) - 0.005
+        )
+        event.handled = True

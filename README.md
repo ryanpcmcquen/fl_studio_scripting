@@ -74,6 +74,19 @@ button, then engaging the desired item.
 | 7    | 0x32 |                | Select Pattern 7 / Solo Track 7 |
 | 8    | 0x33 |                | Select Pattern 8 / Solo Track 8 |
 
+### Pitch Bend:
+
+**Note:**
+
+The pitch bend reports as `0x00` whether increasing or decreasing, but the
+neutral point seems to be `64`, so we filter by greater than `65`,
+or less than `63` to determine which direction we are bending.
+
+| Name | Hex  | Primary Action               | Secondary Action |
+| ---- | ---- | ---------------------------- | ---------------- |
+| +    | 0x00 | Increase Master Track Volume |                  |
+| -    | 0x00 | Decrease Master Track Volume |                  |
+
 ---
 
 ## Demo:
