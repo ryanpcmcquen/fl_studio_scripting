@@ -21,17 +21,17 @@ button, then engaging the desired item.
 
 ### Buttons:
 
-| Name   | Hex  | Primary Action   | Secondary Action |
-| ------ | ---- | ---------------- | ---------------- |
-| Stop   | 0x10 | Stop / Tap Tempo | Toggle Metronome |
-| Start  | 0x11 | Start (Play)     |                  |
-| Record | 0x12 | Record           |                  |
-| Up     | 0x13 | UI Up            |                  |
-| Down   | 0x14 | UI Down          |                  |
-| Right  | 0x15 | UI Right         |                  |
-| Left   | 0x16 | UI Left          |                  |
-| Center | 0x17 | UI Enter         |                  |
-| Hyper  | 0x3A | Secondary Mode   |                  |
+| Name   | Hex  | Primary Action          | Secondary Action   |
+| ------ | ---- | ----------------------- | ------------------ |
+| Stop   | 0x10 | Stop / Tap Tempo        | Toggle Metronome   |
+| Start  | 0x11 | Start (Play)            |                    |
+| Record | 0x12 | Record                  |                    |
+| Up     | 0x13 | UI Up                   | Unmute All Tracks  |
+| Down   | 0x14 | UI Down                 | Focus Mixer        |
+| Right  | 0x15 | UI Right                | Focus Playlist     |
+| Left   | 0x16 | UI Left                 | Focus Channel Rack |
+| Center | 0x17 | UI Enter                |                    |
+| Hyper  | 0x3A | Activate Secondary Mode |                    |
 
 ### Knobs:
 
