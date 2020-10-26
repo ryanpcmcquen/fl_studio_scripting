@@ -55,6 +55,11 @@
 # 0.8.0 - October 26 2020
 # Add secondary actions to the arrow keys.
 #
+# 0.8.1 - October 26 2020
+# Add to Knob adjustment index
+# so that 1-8 are covered
+# instead of Master-7.
+#
 
 import channels
 import midi
@@ -177,7 +182,7 @@ def primary_actions(event):
 
     elif event.data1 in Knobs:
         mixer.setTrackVolume(
-            Knobs.index(event.data1),
+            Knobs.index(event.data1) + 1,
             event.data2 / 100
         )
         event.handled = True
