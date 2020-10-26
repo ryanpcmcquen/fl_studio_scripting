@@ -179,7 +179,9 @@ def OnMidiIn(event):
                 )
 
             if event.data1 == Buttons['Up']:
-                for track_index in range(1, playlist.trackCount()):
+                # This could start at 1, but 0 doesn't do
+                # anything bad, for the time being.
+                for track_index in range(playlist.trackCount()):
                     if playlist.isTrackMuted(track_index):
                         playlist.muteTrack(track_index)
 
