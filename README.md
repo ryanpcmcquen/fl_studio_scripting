@@ -94,3 +94,15 @@ or less than `63` to determine which direction we are bending.
 Video of my scratchpad workflow made possible through midi scripting:
 
 [![Scratchpad workflow](https://img.youtube.com/vi/VGsCKOv_wKg/0.jpg)](https://www.youtube.com/watch?v=VGsCKOv_wKg)
+
+## HTML version of the README:
+
+This can be useful in Fruity HTML NoteBook, or whatever:
+
+[HTML README](https://htmlpreview.github.io/?https://github.com/ryanpcmcquen/fl_studio_scripting/blob/main/html/README.html)
+
+To generate:
+
+```
+bash html/htmlify_the_readme.sh
+```

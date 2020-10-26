@@ -64,6 +64,10 @@
 # Make pitch bend control Master track
 # volume.
 #
+# 0.9.1 - October 26 2020
+# Generate an HTML version of the README for use
+# in Fruity HTML NoteBook or whatever.
+#
 
 import channels
 import midi
