@@ -125,7 +125,7 @@ SECONDAY_MODE_HINT = '**SECONDARY MODE**'
 
 
 def debug_obj(obj):
-    # Snippet to  debug all available
+    # Snippet to  debug all
     # properties and their
     # values on objects:
     for prop in dir(obj):
@@ -177,6 +177,11 @@ def OnMidiIn(event):
                     midi.FPT_Metronome,
                     1
                 )
+
+            if event.data1 == Buttons['Up']:
+                for track_index in range(1, playlist.trackCount()):
+                    if playlist.isTrackMuted(track_index):
+                        playlist.muteTrack(track_index)
 
 
 def OnMidiMsg(event):
