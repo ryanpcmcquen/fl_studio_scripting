@@ -68,6 +68,13 @@
 # Generate an HTML version of the README for use
 # in Fruity HTML NoteBook or whatever.
 #
+# 1.0.0 - October 27 2020
+# Switch to channels.selectOneChannel for
+# channel switching (if available).
+# Since the old one's behavior
+# changed and it no longer
+# selects only one track.
+#
 
 import channels
 import midi
@@ -198,10 +205,15 @@ def primary_actions(event):
 
 def secondary_actions(event):
     if event.data1 in PadBanks['1']:
-        channels.selectChannel(
-            PadBanks['1'].index(event.data1),
-            1
-        )
+        if hasattr(channels, 'selectOneChannel'):
+            channels.selectOneChannel(
+                PadBanks['1'].index(event.data1)
+            )
+        else:
+            channels.selectChannel(
+                PadBanks['1'].index(event.data1),
+                1
+            )
         event.handled = True
 
     elif event.data1 in PadBanks['2']:
