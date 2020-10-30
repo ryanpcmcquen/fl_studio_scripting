@@ -75,6 +75,15 @@
 # changed and it no longer
 # selects only one track.
 #
+# 1.1.0 - October 30 2020
+# Use showWindow instead of setFocused, since showWindow
+# also focuses, but will bring up the window if it is
+# minimized. Deselect all channels before selecting
+# one on older versions so the behavior is
+# consistent (this was already happening
+# because of a bug in the API, but
+# now it is guaranteed).
+#
 
 import channels
 import midi
@@ -210,6 +219,7 @@ def secondary_actions(event):
                 PadBanks['1'].index(event.data1)
             )
         else:
+            channels.deselectAll()
             channels.selectChannel(
                 PadBanks['1'].index(event.data1),
                 1
@@ -253,15 +263,15 @@ def secondary_actions(event):
     # widBrowser      4       Browser
     # widPlugin       5       Plugin window
     elif event.data1 == Buttons['Down']:
-        ui.setFocused(0)
+        ui.showWindow(0)
         event.handled = True
 
     elif event.data1 == Buttons['Right']:
-        ui.setFocused(2)
+        ui.showWindow(2)
         event.handled = True
 
     elif event.data1 == Buttons['Left']:
-        ui.setFocused(1)
+        ui.showWindow(1)
         event.handled = True
 
 

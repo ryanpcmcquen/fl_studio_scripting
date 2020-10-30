@@ -21,17 +21,17 @@ button, then engaging the desired item.
 
 ### Buttons:
 
-| Name   | Hex  | Primary Action          | Secondary Action   |
-| ------ | ---- | ----------------------- | ------------------ |
-| Stop   | 0x10 | Stop / Tap Tempo        | Toggle Metronome   |
-| Start  | 0x11 | Start (Play)            |                    |
-| Record | 0x12 | Record                  |                    |
-| Up     | 0x13 | UI Up                   | Unmute All Tracks  |
-| Down   | 0x14 | UI Down                 | Focus Mixer        |
-| Right  | 0x15 | UI Right                | Focus Playlist     |
-| Left   | 0x16 | UI Left                 | Focus Channel Rack |
-| Center | 0x17 | UI Enter                |                    |
-| Hyper  | 0x3A | Activate Secondary Mode |                    |
+| Name   | Hex  | Primary Action          | Secondary Action  |
+| ------ | ---- | ----------------------- | ----------------- |
+| Stop   | 0x10 | Stop / Tap Tempo        | Toggle Metronome  |
+| Start  | 0x11 | Start (Play)            |                   |
+| Record | 0x12 | Record                  |                   |
+| Up     | 0x13 | UI Up                   | Unmute All Tracks |
+| Down   | 0x14 | UI Down                 | Show Mixer        |
+| Right  | 0x15 | UI Right                | Show Playlist     |
+| Left   | 0x16 | UI Left                 | Show Channel Rack |
+| Center | 0x17 | UI Enter                |                   |
+| Hyper  | 0x3A | Activate Secondary Mode |                   |
 
 ### Knobs:
 
@@ -50,16 +50,16 @@ button, then engaging the desired item.
 
 #### Bank 1:
 
-| Name | Hex  | Primary Action | Secondary Action |
-| ---- | ---- | -------------- | ---------------- |
-| 1    | 0x24 |                | Select Channel 1 |
-| 2    | 0x25 |                | Select Channel 2 |
-| 3    | 0x26 |                | Select Channel 3 |
-| 4    | 0x27 |                | Select Channel 4 |
-| 5    | 0x28 |                | Select Channel 5 |
-| 6    | 0x29 |                | Select Channel 6 |
-| 7    | 0x2A |                | Select Channel 7 |
-| 8    | 0x2B |                | Select Channel 8 |
+| Name | Hex  | Primary Action | Secondary Action      |
+| ---- | ---- | -------------- | --------------------- |
+| 1    | 0x24 |                | Select Channel 1 Only |
+| 2    | 0x25 |                | Select Channel 2 Only |
+| 3    | 0x26 |                | Select Channel 3 Only |
+| 4    | 0x27 |                | Select Channel 4 Only |
+| 5    | 0x28 |                | Select Channel 5 Only |
+| 6    | 0x29 |                | Select Channel 6 Only |
+| 7    | 0x2A |                | Select Channel 7 Only |
+| 8    | 0x2B |                | Select Channel 8 Only |
 
 #### Bank 2:
 
