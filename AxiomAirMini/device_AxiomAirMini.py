@@ -84,6 +84,10 @@
 # because of a bug in the API, but
 # now it is guaranteed).
 #
+# 1.1.1 - November 2 2020
+# Decrease the volume increment step on the Master
+# track. Use nice names for the showWindow calls.
+#
 
 import channels
 import midi
@@ -263,15 +267,15 @@ def secondary_actions(event):
     # widBrowser      4       Browser
     # widPlugin       5       Plugin window
     elif event.data1 == Buttons['Down']:
-        ui.showWindow(0)
+        ui.showWindow(midi.widMixer)
         event.handled = True
 
     elif event.data1 == Buttons['Right']:
-        ui.showWindow(2)
+        ui.showWindow(midi.widPlaylist)
         event.handled = True
 
     elif event.data1 == Buttons['Left']:
-        ui.showWindow(1)
+        ui.showWindow(midi.widChannelRack)
         event.handled = True
 
 
@@ -314,13 +318,13 @@ def OnPitchBend(event):
     if event.data2 > 65:
         mixer.setTrackVolume(
             0,
-            mixer.getTrackVolume(0) + 0.005
+            mixer.getTrackVolume(0) + 0.0025
         )
         event.handled = True
 
     elif event.data2 < 63:
         mixer.setTrackVolume(
             0,
-            mixer.getTrackVolume(0) - 0.005
+            mixer.getTrackVolume(0) - 0.0025
         )
         event.handled = True
