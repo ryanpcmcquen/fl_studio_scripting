@@ -88,6 +88,9 @@
 # Decrease the volume increment step on the Master
 # track. Use nice names for the showWindow calls.
 #
+# 1.1.2 - November 17 2020
+# Handle all primary and secondary action events.
+#
 
 import channels
 import midi
@@ -249,6 +252,7 @@ def secondary_actions(event):
             midi.FPT_Metronome,
             1
         )
+        event.handled = True
 
     elif event.data1 == Buttons['Up']:
         # This could start at 1, but 0 doesn't do
@@ -256,6 +260,7 @@ def secondary_actions(event):
         for track_index in range(playlist.trackCount()):
             if playlist.isTrackMuted(track_index):
                 playlist.muteTrack(track_index)
+        event.handled = True
 
     # FL window constants
     # -------------------
