@@ -91,6 +91,9 @@
 # 1.1.2 - November 17 2020
 # Handle all primary and secondary action events.
 #
+# 1.1.3 - August 16 2021
+# Remove errant space in comment.
+#
 
 import channels
 import midi
@@ -164,9 +167,10 @@ SECONDAY_MODE_HINT = '**SECONDARY MODE**'
 
 
 def debug_obj(obj):
-    # Snippet to  debug all
-    # properties and their
-    # values on objects:
+    # Snippet to debug all
+    # properties and
+    # their values
+    # on objects:
     for prop in dir(obj):
         # Filter out all 'private' methods:
         if prop[:2] != '__':
